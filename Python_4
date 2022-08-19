@@ -1,0 +1,20 @@
+Question 4:
+Given a Matrix, convert it into the dictionary with keys as row numbers and values as a nested list.
+
+Input : test_list = [[5, 6, 7], [8, 3, 2]]
+Output : {1: [5, 6, 7], 2: [8, 3, 2]}
+Explanation: Matrix rows are paired with row numbers in order.
+		
+Input : test_list = [[5, 6, 7]]
+Output : {1: [5, 6, 7]}
+Explanation: Matrix rows are paired with row numbers in order.
+
+	
+SOLUTION:
+x=[[1,2,3],[4,5,6],[7,8,9]]
+l=len(x)
+d={}
+for i in range(l):
+      for j in x:
+    			d[i+1]=j
+print(d)
