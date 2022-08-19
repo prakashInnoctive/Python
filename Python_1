@@ -1,0 +1,11 @@
+Question 1: 
+	Given an "out" string length 4, such as "<<>>", and a word, return a new string where the word is in the middle of the out string, e.g. "<<word>>".
+	make_out_word('<<>>', 'Yay') → '<<Yay>>'
+make_out_word('<<>>', 'WooHoo') → '<<WooHoo>>'
+make_out_word('[[]]', 'word') → '[[word]]'
+	
+SOLUTION:
+
+Out_string = input(“Enter any string of length 4 : ”)
+New_string =input(“Enter a string : “)
+print(Out_string[ :2]+””+New_string+””+Out_string[2:])
