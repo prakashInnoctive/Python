@@ -12,6 +12,8 @@ keys = ['Ten', 'Twenty', 'Thirty']
 values = [10, 20, 30]
 d={}
 for key in keys:
-		for value in values:
-    			d[key]=value
+    for value in values:
+    	d[key]=value
+	values.remove(v)
+        break
 print(d)
