@@ -12,3 +12,6 @@ b=[4,5,6]
 a1=numpy.array(a)
 b1=numpy.array(b)
 c=(a[1],b[1])
+z=numpy.array(c)
+print(z)
+
