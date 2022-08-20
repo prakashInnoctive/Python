@@ -1,0 +1,31 @@
+Question 2: 
+	Insert 30 records into the user_master table and 5 records in the city_master table
+
+
+INSERT INTO city_master(
+	city_name,city_state,added_date)
+VALUES
+  ('Pune','MH',CURRENT_TIMESTAMP),
+  ('Mumbai','MH',CURRENT_TIMESTAMP),
+  ('Jabalpur','MP',CURRENT_TIMESTAMP),
+  ('Singrauli','MP',CURRENT_TIMESTAMP),
+  ('Satna','MP',CURRENT_TIMESTAMP)
+
+INSERT INTO user_master(name,contact_number,email_id,blood_group,added_date)
+VALUES
+	('A',6756765456,'fgh@gmail.com','b+',CURRENT_TIMESTAMP),
+	('B',3456765456,'fkl@gmail.com','b+',CURRENT_TIMESTAMP),
+	('C',6756790456,'fh@gmail.com','b+',CURRENT_TIMESTAMP),
+	('D',6756712456,'gh@gmail.com','b+',CURRENT_TIMESTAMP),
+	('E',6756745456,'fg@gmail.com','b+',CURRENT_TIMESTAMP),
+	('F',67562365456,'fggh@gmail.com','b-',CURRENT_TIMESTAMP),
+	('G',6753265456,'fghh@gmail.com','a+',CURRENT_TIMESTAMP),
+	('H',6755665456,'fght@gmail.com','o+',CURRENT_TIMESTAMP),
+	('I',6709765456,'aerrtg@gmail.com','b+',CURRENT_TIMESTAMP),
+	('J',3412765456,'styhrst@gmail.com','b+',CURRENT_TIMESTAMP),
+	('K',67897790456,'wert@gmail.com','b+',CURRENT_TIMESTAMP),
+	('L',6759012456,'ery@gmail.com','b+',CURRENT_TIMESTAMP),
+	('M',6754745456,'ser@gmail.com','b+',CURRENT_TIMESTAMP),
+	('N',67452365456,'dfh@gmail.com','b-',CURRENT_TIMESTAMP),
+	('O',6745265456,'sdah@gmail.com','a+',CURRENT_TIMESTAMP),
+	('P',6785665456,'sdf@gmail.com','o+',CURRENT_TIMESTAMP),
