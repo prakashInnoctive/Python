@@ -1,0 +1,34 @@
+Question 1: 
+Create table the below two tables with proper MySQL datatypes and use primary and foreign key references (user_master's city_id will be the primary key of city_master's id column)   
+		1. user_master
+			- id
+			- name
+			- contact_number
+			- email_id
+			- blood_group
+			- city_id
+			- added_date
+    
+    CREATE TABLE user_master(
+        id  SERIAL UNIQUE NOT NULL,
+        name VARCHAR(50) NOT NULL,
+        contact_number BIGINT NOT NULL,
+        email_id VARCHAR(100) UNIQUE NOT NULL,
+        blood_group VARCHAR(5) NOT NULL,
+        city_id INTEGER REFERENCES city_master(id),
+        added_date TIMESTAMP 
+)
+    
+
+		2. city_master
+			- id
+			- city_name
+			- city_state
+			- added_date
+     
+     CREATE TABLE city_master(
+        id SERIAL PRIMARY KEY NOT NULL,
+        city_name VARCHAR(50) NOT NULL,
+        city_state VARCHAR(100) NOT NULL,
+        added_date TIMESTAMP
+)
