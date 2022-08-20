@@ -1,0 +1,10 @@
+Question 4: 
+Update the user_master's even ID column records using the update clause, where the name of the user should be updated as "updated_existing_name”
+	e.g
+		- If the ID of the employee is 10 name is "John" then the output name should be
+			- updated_John
+
+
+UPDATE user_master
+SET name='updated_' || name
+WHERE id % 2=0
