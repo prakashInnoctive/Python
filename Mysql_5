@@ -1,0 +1,5 @@
+Question 5:
+Delete all users where the email_id of the employee contains the keyword "Gmail" 
+
+DELETE FROM user_master
+WHERE email_id::text LIKE '%Gmail%'
