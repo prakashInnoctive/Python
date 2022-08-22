@@ -1,0 +1,13 @@
+Question 3: 
+	Select both table's all records using mysql join
+	Where you should use,
+		- where clause
+		- limit, offset
+		- like
+		- order by
+
+SELECT * FROM user_master 
+JOIN city_master ON user_master.city_id = city_master.id
+WHERE name LIKE '%k%'
+ORDER BY name DESC
+LIMIT 3 OFFSET 2
