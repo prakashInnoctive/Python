@@ -1,0 +1,57 @@
+Question 1: 
+Create a REST POST API for inserting records in the “city_master” table
+Create a REST POST API for inserting records in the “user_master” table
+
+# Creating Database for user_master and city_master
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import ForeignKey
+
+app=Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI']="mysql://Prakash:atul8871@localhost/Assessment"
+app.config['SECRET_KEY']='HELLLO'
+db=SQLAlchemy(app)
+
+
+
+class user_master(db.Model):
+    __tablename__='user_master'
+    id=db.Column(db.String(15),primary_key=True)
+    name=db.Column(db.String(50),nullable=False)
+    contact_number=db.Column(db.String(100))
+    email_id=db.Column(db.String(100))
+    blood_group=db.Column(db.String(10))
+    city_id=db.Column(db.String(15),ForeignKey('city_master.id'))
+    added_date=db.Column(db.String(30))
+
+    def __init__(self,id,name,contact_number,email_id,blood_group,city_id,added_date):
+        self.id=id
+        self.name=name
+        self.contact_number=contact_number
+        self.email_id=email_id
+        self.blood_group=blood_group
+        self.city_id=city_id
+        self.added_date=added_date
+        
+    
+class city_master(db.Model):
+    __tablename__='city_master'
+    id=db.Column('City_id',db.String(15),primary_key=True)
+    city_name=db.Column(db.String(50))
+    city_state=db.Column(db.String(100))
+    added_date=db.Column(db.String(30))
+
+    def __init__(self,id,city_name,city_state,added_date):
+        self.id=id
+        self.city_name=city_name
+        self.city_state=city_state
+        self.added_date=added_date
+
+    def __repr__(self):
+        return 'City name {} State {}'.format(self.city_name,self.city_state)
+
+
+
+if __name__ =='__main__':
+    app.run(debug=True)
+    
