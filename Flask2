@@ -1,0 +1,147 @@
+Question 2:
+Create a REST GET  API for getting records from the “city_master” table
+Create a REST GET  API for getting records from the “user_master” table
+
+from flask import Flask,request,render_template,flash
+from flask_sqlalchemy import SQLAlchemy
+from flask_mysqldb import MySQLdb
+
+app=Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI']='mysql://root:atul8871@localhost/assesement'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS']=False
+db=SQLAlchemy(app)
+
+class User(db.Model):
+    id=db.Column(db.String(10),primary_key=True)
+    name=db.Column(db.String(100),unique=False,nullable=False)
+    contact_number=db.Column(db.String(10),unique=False,nullable=False)
+    email_id=db.Column(db.String(100),unique=False,nullable=False)
+    blood_group=db.Column(db.String(10),unique=False,nullable=False)
+    city_id=db.Column(db.String(100),unique=False,nullable=False)
+    added_date=db.Column(db.String(10),unique=False,nullable=False)
+
+@app.route('/')
+def home():
+    return 'Home Page'
+@app.route('/user_entry',methods=['GET','POST'])
+def adduser():
+    if request.method=='POST':
+        id=request.form.get('id')
+        name=request.form.get('user_name')
+        contact_no=request.form.get('contact_number')
+        email=request.form.get('email_id')
+        blood=request.form.get('blood_group')
+        city_id=request.form.get('city_id')
+        date=request.form.get('added_date')
+        entry=User(id=id,name=name,contact_number=contact_no,email_id=email,blood_group=blood,city_id=city_id,added_date=date)
+        db.session.add(entry)
+        db.session.commit()
+        return "USER RECORDS SAVED"
+
+    return render_template('userform.html')
+
+####to get data of user######
+
+@app.route('/getuser')
+def getuser():
+    user=User.query.all()
+    return render_template('getuser.html',user=user)
+
+class City(db.Model):
+    id=db.Column(db.String(10),primary_key=True)
+    city_name=db.Column(db.String(100),unique=False,nullable=False)
+    city_state=db.Column(db.String(10),unique=False,nullable=False)
+    added_date=db.Column(db.String(10),unique=False,nullable=False)
+
+
+@app.route('/city_entry',methods=['GET','POST'])
+def addcity():
+    if request.method=='POST':
+        id=request.form.get('id')
+        name=request.form.get('city_name')
+        state=request.form.get('city_state')
+        date=request.form.get('added_date')
+        entry=City(id=id,city_name=name,city_state=state,added_date=date)
+        db.session.add(entry)
+        db.session.commit()
+        return 'CITY RECORDS SAVED'
+
+    return render_template('cityform.html')
+
+######to get record of cities######
+
+@app.route('/getcity')
+def getcity():
+    city=City.query.all()
+    return render_template('getcity.html',city=city)
+
+if __name__=='__main__':
+    app.run(debug=True)
+ 
+ #### getuser.html ######
+ 
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Users Details</title>
+</head>
+<body>
+    <table action="/getuser" method="GET">
+        <tr>
+            <th>ID</th>
+            <th>NAME</td>
+            <th>CONTACT</th>
+            <th>EMAIL</th>
+            <th>BLOOD_GROUP</th>
+            <th>CITY_ID</th>
+            <th>ADDED_DATE</th>
+        </tr>
+           
+        <tr>
+            {%for user in user%}
+            <td>{{user.id}}</td>
+            <td>{{user.name}}</td>
+            <td>{{user.contact_number}}</td>
+            <td>{{user.email_id}}</td>
+            <td>{{user.blood_group}}</td>
+            <td>{{user.city_id}}</td>
+            <td>{{user.added_date}}</td>
+        </tr>
+        {%endfor%}
+</body>       
+</html>
+
+##### getcity.html #####
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Users Details</title>
+</head>
+<body>
+    <table action="/getuser" method="GET">
+        <tr>
+            <th>ID</th>
+            <th>CITY_NAME</td>
+            <th>CITY_STATE</th>
+            <th>ADDED_DATE</th>
+        </tr>
+           
+        <tr>
+            {%for city in city%}
+            <td>{{city.id}}</td>
+            <td>{{city.city_name}}</td>
+            <td>{{city.city_state}}</td>
+            <td>{{city.added_date}}</td>
+        </tr>
+        {%endfor%}
+</body>       
+</html>
+  
+ 
