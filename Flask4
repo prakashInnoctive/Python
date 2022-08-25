@@ -1,0 +1,79 @@
+
+
+from flask import Flask,request,render_template,redirect,url_for
+from flask_sqlalchemy import SQLAlchemy
+from flask_mysqldb import MySQLdb
+
+app=Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI']='mysql://root:atul8871@localhost/assesement'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS']=False
+db=SQLAlchemy(app)
+
+class User(db.Model):
+    id=db.Column(db.String(10),primary_key=True)
+    name=db.Column(db.String(100),unique=False,nullable=False)
+    contact_number=db.Column(db.String(10),unique=False,nullable=False)
+    email_id=db.Column(db.String(100),unique=False,nullable=False)
+    blood_group=db.Column(db.String(10),unique=False,nullable=False)
+    city_id=db.Column(db.String(100),unique=False,nullable=False)
+    added_date=db.Column(db.String(10),unique=False,nullable=False)
+
+@app.route('/')
+def home():
+    return 'Home Page'
+@app.route('/user_entry',methods=['GET','POST'])
+def adduser():
+    if request.method=='POST':
+        id=request.form.get('id')
+        name=request.form.get('user_name')
+        contact_no=request.form.get('contact_number')
+        email=request.form.get('email_id')
+        blood=request.form.get('blood_group')
+        city_id=request.form.get('city_id')
+        date=request.form.get('added_date')
+        entry=User(id=id,name=name,contact_number=contact_no,email_id=email,blood_group=blood,city_id=city_id,added_date=date)
+        db.session.add(entry)
+        db.session.commit()
+        return "USER RECORDS SAVED"
+
+    return render_template('userform.html')
+@app.route('/getuser')
+def getuser():
+    user=User.query.all()
+    return render_template('getuser.html',user=user)
+
+##### to update#####
+
+@app.route('/update/<int:id>',methods=['GET','POST'])
+def update(id):
+    update_con=User.query.get_or_404(id)
+    if request.method=='POST':
+        update_con.contact_number=request.form['contact_number']
+        db.session.commit()
+    return render_template('update.html',update_con=update_con)
+
+##### update.html #####
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UPDATE PAGE</title>
+  </head>
+  <body>
+    <p>UPDATE CONTACT</p>
+    <form method="POST" action="/update/{{update_con.id}}">
+      <label name="contact_number" for="number">CONTACT_NUMBER</label>
+      <input
+        type="text"
+        name="contact_number"
+        id="number"
+        value="{{update_con.contact_number}}"
+      />
+
+      <input type="submit" value="Update" />
+    </form>
+  </body>
+</html>
