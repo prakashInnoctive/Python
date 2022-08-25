@@ -2,56 +2,135 @@ Question 1:
 Create a REST POST API for inserting records in the “city_master” table
 Create a REST POST API for inserting records in the “user_master” table
 
-# Creating Database for user_master and city_master
-from flask import Flask
+#####Main.py####
+
+from flask import Flask,request,render_template
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import ForeignKey
+from flask_mysqldb import MySQLdb
 
 app=Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI']="mysql://Prakash:atul8871@localhost/Assessment"
-app.config['SECRET_KEY']='HELLLO'
+app.config['SQLALCHEMY_DATABASE_URI']='mysql://root:atul8871@localhost/assesement'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS']=False
 db=SQLAlchemy(app)
 
+class User(db.Model):
+    id=db.Column(db.String(10),primary_key=True)
+    name=db.Column(db.String(100),unique=False,nullable=False)
+    contact_number=db.Column(db.String(10),unique=False,nullable=False)
+    email_id=db.Column(db.String(100),unique=False,nullable=False)
+    blood_group=db.Column(db.String(10),unique=False,nullable=False)
+    city_id=db.Column(db.String(100),unique=False,nullable=False)
+    added_date=db.Column(db.String(10),unique=False,nullable=False)
+
+@app.route('/')
+def home():
+    return 'Home Page'
+@app.route('/user_entry',methods=['GET','POST'])
+def adduser():
+    if request.method=='POST':
+        id=request.form.get('id')
+        name=request.form.get('user_name')
+        contact_no=request.form.get('contact_number')
+        email=request.form.get('email_id')
+        blood=request.form.get('blood_group')
+        city_id=request.form.get('city_id')
+        date=request.form.get('added_date')
+        entry=User(id=id,name=name,contact_number=contact_no,email_id=email,blood_group=blood,city_id=city_id,added_date=date)
+        db.session.add(entry)
+        db.session.commit()
+        return "USER RECORDS SAVED"
+
+    return render_template('userform.html')
 
 
-class user_master(db.Model):
-    __tablename__='user_master'
-    id=db.Column(db.String(15),primary_key=True)
-    name=db.Column(db.String(50),nullable=False)
-    contact_number=db.Column(db.String(100))
-    email_id=db.Column(db.String(100))
-    blood_group=db.Column(db.String(10))
-    city_id=db.Column(db.String(15),ForeignKey('city_master.id'))
-    added_date=db.Column(db.String(30))
-
-    def __init__(self,id,name,contact_number,email_id,blood_group,city_id,added_date):
-        self.id=id
-        self.name=name
-        self.contact_number=contact_number
-        self.email_id=email_id
-        self.blood_group=blood_group
-        self.city_id=city_id
-        self.added_date=added_date
-        
-    
-class city_master(db.Model):
-    __tablename__='city_master'
-    id=db.Column('City_id',db.String(15),primary_key=True)
-    city_name=db.Column(db.String(50))
-    city_state=db.Column(db.String(100))
-    added_date=db.Column(db.String(30))
-
-    def __init__(self,id,city_name,city_state,added_date):
-        self.id=id
-        self.city_name=city_name
-        self.city_state=city_state
-        self.added_date=added_date
-
-    def __repr__(self):
-        return 'City name {} State {}'.format(self.city_name,self.city_state)
+class City(db.Model):
+    id=db.Column(db.String(10),primary_key=True)
+    city_name=db.Column(db.String(100),unique=False,nullable=False)
+    city_state=db.Column(db.String(10),unique=False,nullable=False)
+    added_date=db.Column(db.String(10),unique=False,nullable=False)
 
 
+@app.route('/city_entry',methods=['GET','POST'])
+def addcity():
+    if request.method=='POST':
+        id=request.form.get('id')
+        name=request.form.get('city_name')
+        state=request.form.get('city_state')
+        date=request.form.get('added_date')
+        entry=City(id=id,city_name=name,city_state=state,added_date=date)
+        db.session.add(entry)
+        db.session.commit()
+        return 'CITY RECORDS SAVED'
 
-if __name__ =='__main__':
+    return render_template('cityform.html')
+
+
+if __name__=='__main__':
     app.run(debug=True)
-    
+  
+ #####userform.html#####
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>USER_MASTER</title>
+</head>
+<body>
+    <form method="Post" action="/user_entry">
+        <label name="id" for="id">ID</label>
+        <input type="text" id="id" name="id">
+
+        <label name="user_name" for="name">USER_NAME</label>
+        <input type="text" name="user_name" id="name">
+
+        <label name="contact_number" for="number">CONTACT_NUMBER</label>
+        <input type="text" name="contact_number" id="number">
+
+        <label name="email_id" for="email">EMAIL</label>
+        <input type="text" name="email_id" id="email">
+        
+        <label name="blood_group" for="blood">BLOOD GROUP</label>
+        <input type="text" id="blood" name="blood_group">
+
+        <label name="city_id" for="city_id">ID</label>
+        <input type="text" id="city_id" name="city_id">
+        
+
+        <label name="added_date" for="date">ADDED_DATE</label>
+        <input type="text" id="date" name="added_date">
+        
+        <input type="submit" value="Submit">
+</body>
+</html>
+
+#####cityform.html####
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CITY_MASTER</title>
+</head>
+<body>
+    <form method="Post" action="/city_entry">
+        <label name="id" for="id">ID</label>
+        <input type="text" id="id" name="id">
+
+        <label name="city_name" for="name">CITY_NAME</label>
+        <input type="text" name="city_name" id="name">
+
+        <label name="city_state" for="state">CITY_STATE</label>
+        <input type="text" name="city_state" id="state">
+
+        <label name="added_date" for="date">ADDED_DATE</label>
+        <input type="text" id="date" name="added_date">
+        
+        <input type="submit" value="Submit">
+
+
+
+</body>
+</html>
