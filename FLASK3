@@ -1,0 +1,146 @@
+Question 3:
+Create a REST GET API for getting the records of the user_master table in a paginated format.
+Here the page size will be 10 and the page number will be from 0 to n, so for every page or every call, you will get only 10 records.
+For reference pls visit https://examples.bootstrap-table.com/#options/table-ajax.html , don’t copy and paste code, make sure that you understand the code and you have to explain what you did and why you did that.
+
+
+####### FLASK.py#########
+from flask import Flask,request,render_template,redirect,url_for
+from flask_sqlalchemy import SQLAlchemy
+from flask_mysqldb import MySQLdb
+from flask_paginate import Pagination, get_page_args
+import os
+
+app=Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI']='mysql://root:atul8871@localhost/assesement'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS']=False
+db=SQLAlchemy(app)
+
+class User(db.Model):
+    id=db.Column(db.String(10),primary_key=True)
+    name=db.Column(db.String(100),unique=False,nullable=False)
+    contact_number=db.Column(db.String(10),unique=False,nullable=False)
+    email_id=db.Column(db.String(100),unique=False,nullable=False)
+    blood_group=db.Column(db.String(10),unique=False,nullable=False)
+    city_id=db.Column(db.String(100),unique=False,nullable=False)
+    added_date=db.Column(db.String(10),unique=False,nullable=False)
+
+@app.route('/')
+def home():
+    return 'Home Page'
+@app.route('/user_entry',methods=['GET','POST'])
+def adduser():
+    if request.method=='POST':
+        id=request.form.get('id')
+        name=request.form.get('user_name')
+        contact_no=request.form.get('contact_number')
+        email=request.form.get('email_id')
+        blood=request.form.get('blood_group')
+        city_id=request.form.get('city_id')
+        date=request.form.get('added_date')
+        entry=User(id=id,name=name,contact_number=contact_no,email_id=email,blood_group=blood,city_id=city_id,added_date=date)
+        db.session.add(entry)
+        db.session.commit()
+        return "USER RECORDS SAVED"
+
+    return render_template('userform.html')
+
+@app.route('/getuser',methods=['GET','POST'])
+def getuser():
+    if request.method=='GET':
+        users=User.query.all()
+        return render_template('getuser.html',users=users)
+
+@app.route('/usertable/<int:page_num>')
+def usertable(page_num):
+    users = User.query.paginate(per_page=10, page=page_num, error_out=True)
+    return render_template('try.html',usertable =users)
+
+if __name__=='__main__':
+    app.run()
+    
+###### usertable.html#########
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>USERTABLE</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <div class="table-responsive">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th>id</th>
+              <th>Name</th>
+              <th>contact_number</th>
+              <th>email.id</th>
+              <th>blood_group</th>
+              <th>city_id</th>
+              <th>added_date</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for user in usertable.items %}
+            <tr>
+              <td>{{user.id}}</td>
+              <td>{{user.name}}</td>
+              <td>{{user.contact_number}}</td>
+              <td>{{user.email_id}}</td>
+              <td>{{user.blood_group}}</td>
+              <td>{{user.city_id}}</td>
+              <td>{{user.added_date}}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <ul class="pagination">
+        {% if usertable.has_prev %}
+        <li class="page-item">
+          <a
+            class="page-link"
+            href="{{ url_for('usertable',page_num=display_users.prev_num) }}"
+            >Previous</a
+          >
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+          <span class="page-link">Previous</span>
+          {% endif %}
+        </li>
+
+        {% for page in usertable.iter_pages(left_edge=3, right_edge=3) %} {% if
+        page %}
+        <li class="page-item">
+          <a class="page-link" href="{{ url_for('usertable',page_num=page) }}"
+            >{{ page }}</a
+          >
+        </li>
+        {% else %}
+        <li class="page-item disabled" id="records">
+          <a class="#0" class="page-link">_</a>
+        </li>
+        {% endif %} {% endfor %} {% if usertable.has_next %}
+        <li class="page-item">
+          <a
+            class="page-link"
+            href="{{ url_for('usertable',page_num=usertable.next_num) }}"
+            >Next</a
+          >
+        </li>
+        {% else %}
+        <li class="page-item disabled"><span class="page_link">Next</span></li>
+        {% endif %}
+      </ul>
+    </div>
+  </body>
+</html>
